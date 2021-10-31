@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.myapp.mapper.BoardMapper">
+
+
+	<select id="read" resultType="org.zerock.myapp.domain.BoardVO">
+
+		SELECT * FROM tbl_board WHERE bno=#{bno}
+
+	</select>
+
+
+	<update id="update">
+		UPDATE tbl_board
+		SET
+			title = #{title},
+			content = #{content},
+			writer = #{writer},
+			update_ts = sysdate
+		WHERE
+			bno = #{bno}
+	</update>
+	
+	
+	 <insert id="insertSelectKey">
+
+    <!-- keyProperty="키칼럼" order="실행순서 default before" resultType="생성되는 타입" , selectKey는 한번만 쓸 수 있음-->
+     <selectKey keyProperty="bno" order="BEFORE" resultType="int">
+        SELECT ISEQ$$_59905.NEXTVAL 
+        FROM dual
+     </selectKey>
+
+      INSERT INTO tbl_board (bno, title, content, writer)
+      VALUES( #{bno}, #{title}, #{content}, #{writer} )
+    </insert>
+    
+    <!-- 시퀀스 이용 유니크 문자열 만들기
+    
+	 <insert id="insertSelectKey">
+     <selectKey keyProperty="title" order="BEFORE" resultType="String">
+        SELECT ISEQ$$_59905.NEXTVAL || '이렇게 연결할 수 있다!'
+        FROM dual
+     </selectKey>
+     
+      INSERT INTO tbl_board (title, content, writer)
+      VALUES(#{title}, #{content}, #{writer} )
+    </insert>-->
+</mapper>
+     
